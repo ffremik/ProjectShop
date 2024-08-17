@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ProjectMoon</string>
+    <array name="items_drawer_menu">
+        <item>Настройки</item>
+        <item>История</item>
+        <item>Контакты</item>
+    </array>
+</resources>
