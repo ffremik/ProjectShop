@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.projectmoon.view.home.retrofit.ItemHistoryBuy
 import com.example.projectmoon.view.home.retrofit.Items
 import kotlinx.coroutines.flow.Flow
 
@@ -32,4 +33,10 @@ interface BasketDao{
 
     @Delete
     suspend fun deleteItemBasket(item: Items)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addItemHistoryBuy(itemHistoryBuy: ItemHistoryBuy)
+
+    @Query("SELECT * FROM historyBuy")
+    fun getAllItemsHistoryBuy(): Flow<List<ItemHistoryBuy>>
 }

@@ -41,9 +41,9 @@ fun HomeScreen(homeVM: HomeVM = viewModel(), navController: NavController){
             LoadingScreenHome()
         }
         is StateInteractions.Error -> {
-            val allListSho = listOf(Items(price = 4542L, id = "24123", type = "dsaw", img_src =  "url"))
-            SuccessHomeScreen(allListSho, navController)
-          // ErrorScreenHome() //не забыть убрать
+//            val allListSho = listOf(Items(price = 4542L, id = "24123", type = "dsaw", img_src =  "url"))
+//            SuccessHomeScreen(allListSho, navController)
+          ErrorScreenHome()
         }
         is StateInteractions.Success -> {
             val list = (uiState as StateInteractions.Success).allList

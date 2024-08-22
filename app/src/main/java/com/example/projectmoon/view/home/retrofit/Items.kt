@@ -19,3 +19,15 @@ data class Items(
     val isHistoryBuy: Boolean = false
 
 )
+
+@Entity(tableName = "historyBuy")
+data class ItemHistoryBuy(
+    @PrimaryKey(autoGenerate = true)
+    val autoId: Int = 0,
+    val price: Long,
+    val id: String,
+    val img_src: String,
+    val date: String,
+
+
+)

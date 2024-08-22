@@ -16,6 +16,7 @@ import com.example.projectmoon.ProjectApplication
 import com.example.projectmoon.view.basket.data.Order
 import com.example.projectmoon.view.basket.room.BasketDao
 import com.example.projectmoon.view.basket.workmanager.OrderStatusWorker
+import com.example.projectmoon.view.home.retrofit.ItemHistoryBuy
 import com.example.projectmoon.view.home.retrofit.Items
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
@@ -23,6 +24,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class BasketVM(
     private val basketDao: BasketDao,
@@ -46,8 +50,7 @@ class BasketVM(
     val listItemBasket = basketDao.getAllItemsBasket()
 
     val isOpenDeleteItem = MutableStateFlow(false)
-    val sizeStatusOrder = MutableStateFlow(Order.values())
-    val currentStatusOrder = MutableStateFlow(sizeStatusOrder.value[0])
+
 
     fun updateIsOpenDeleteItem() {
         isOpenDeleteItem.value = !isOpenDeleteItem.value
@@ -68,7 +71,15 @@ class BasketVM(
 
     fun addItemHistoryBuy(item: Items){
         viewModelScope.launch {
-            basketDao.addItemBasket(item.copy(isHistoryBuy = true))
+            basketDao.addItemHistoryBuy(
+                ItemHistoryBuy(
+                    price = item.price,
+                    id = item.id,
+                    img_src = item.img_src,
+                    date = getCurrentDate(),
+                )
+            )
+            basketDao.deleteItemBasket(item)
         }
     }
 
@@ -87,6 +98,11 @@ class BasketVM(
                 .setInputData(workDataOf("listItems" to Gson().toJson(list)))
                 .build()
         )
+    }
+
+    private fun getCurrentDate(): String{
+        val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+        return dateFormat.format(Date())
     }
 
 
