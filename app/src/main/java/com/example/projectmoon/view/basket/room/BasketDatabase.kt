@@ -2,10 +2,11 @@ package com.example.projectmoon.view.basket.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.example.projectmoon.view.home.retrofit.ItemHistoryBuy
 import com.example.projectmoon.view.home.retrofit.Items
 
 @Database(
-    entities = [Items::class],
+    entities = [Items::class, ItemHistoryBuy::class],
     version = 1,
     exportSchema = false
 )
