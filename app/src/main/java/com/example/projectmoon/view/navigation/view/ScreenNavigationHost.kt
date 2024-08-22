@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.projectmoon.R
+import com.example.projectmoon.view.navigation.RouteNavigation
 import com.example.projectmoon.view.navigation.viewmodel.MainVM
 
 @Composable
@@ -28,11 +29,14 @@ fun PreviewMainScreen() {
 }
 
 @Composable
-fun ScreenNavigationHost(mainVM: MainVM = viewModel()) {
+fun ScreenNavigationHost(
+    mainVM: MainVM = viewModel(factory = MainVM.factory)
+) {
     val navController = rememberNavController()
     val selectedItem by mainVM.selectedDrawerItem.collectAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val listItems = stringArrayResource(id = R.array.items_drawer_menu)
+    val sizeBasket by mainVM.sizeListBasket.collectAsState(initial = emptyList())
 
     ModalNavigationDrawer(
         gesturesEnabled = true,
@@ -52,9 +56,8 @@ fun ScreenNavigationHost(mainVM: MainVM = viewModel()) {
                         DrawerMenu(
                             item = it,
                             selected = selectedItem,
-                        ) {
-                            mainVM.updateSelectedDrawerItem(it)
-                        }
+                            navController
+                        )
                     }
                 }
             }
@@ -63,7 +66,11 @@ fun ScreenNavigationHost(mainVM: MainVM = viewModel()) {
         }
     ) {
 
-        ButtonBar(drawerState, navController)
+        ButtonBar(
+            drawerState,
+            navController,
+            sizeBasket.count { !it.isHistoryBuy }
+        )
     }
 
 }

@@ -4,6 +4,8 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import com.example.projectmoon.view.navigation.RouteNavigation
 
 @Composable
 @Preview(showBackground = true)
@@ -15,7 +17,7 @@ fun PreviewDrawerMenu() {
 fun DrawerMenu(
     item: String,
     selected : String,
-    onClick: (String)->Unit
+    navHostController: NavHostController
 ) {
     NavigationDrawerItem(
 
@@ -23,6 +25,10 @@ fun DrawerMenu(
             Text(text = item)
         },
         selected = item == selected,
-        onClick = { onClick(item) }
+        onClick = {
+            navHostController.navigate(item) {
+                launchSingleTop = true
+            }
+        }
     )
 }

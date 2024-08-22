@@ -2,8 +2,10 @@ package com.example.projectmoon.view.basket.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -12,7 +14,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -64,8 +68,8 @@ fun ItemSBasket(
 
             Box(
                 modifier = Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.TopEnd
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.TopCenter
             ) {
                 AsyncImage(
                     contentScale = ContentScale.Crop,
@@ -77,33 +81,60 @@ fun ItemSBasket(
                     model = itemShop.img_src.replace("http", "https"),
                     contentDescription = ""
                 )
-                Icon(
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
-                        .clickable {
-                            onClick(itemShop)
+                        .fillMaxWidth()
+                ) {
+                    if (!itemShop.isOrdered) {
+                        Checkbox(
+                            modifier = Modifier
+                                .padding(start = 12.dp, top = 12.dp),
+                            checked = itemShop.isBuy,
+                            onCheckedChange = {
+                                basketVM.updateIsBue(itemShop)
+                            }
+                        )
+                        IconButton(
+                            modifier = Modifier
+                                .padding(end = 12.dp, top = 12.dp),
+                            onClick = { onClick(itemShop) }
+                        ) {
+                            Icon(
+                                modifier = Modifier
+                                    .size(30.dp),
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = ""
+                            )
                         }
-                        .size(45.dp)
-                        .padding(end = 12.dp, top = 12.dp),
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = ""
+                    }
+
+                }
+
+            }
+            if (itemShop.isOrdered) {
+                OrderedInformation(itemShop) {
+                    basketVM.addItemHistoryBuy(itemShop)
+                }
+
+            } else {
+                Text(
+                    text = "Цена: ${itemShop.price} Р ${itemShop.statusOrder} ${itemShop.isOrdered}",
+                    fontSize = 18.sp
+                )
+                Text(
+                    textAlign = TextAlign.Start,
+                    maxLines = 2,
+                    text = "Название ${itemShop.id}",
+                    fontSize = 18.sp
                 )
             }
 
-            Text(
-                text = "Цена: ${itemShop.price} Р",
-                fontSize = 18.sp
-            )
-            Text(
-                textAlign = TextAlign.Start,
-                maxLines = 2,
-                text = "Название ${itemShop.id}",
-                fontSize = 18.sp
-            )
         }
     }
-    if (isOpenDelete){
+    if (isOpenDelete) {
         InformationDeleteScreen(
-            onClick = {basketVM.updateIsOpenDeleteItem()}
+            onClick = { basketVM.updateIsOpenDeleteItem() }
         ) {
             basketVM.deleteItem(itemShop)
         }

@@ -16,6 +16,9 @@ interface BasketDao{
     @Query("SELECT * FROM itemBasket")
     fun getAllItemsBasket(): Flow<List<Items>>
 
+    @Query("SELECT * FROM itemBasket WHERE id LIKE :id ")
+    suspend fun getItem(id: String): Items
+
     @Query("DELETE FROM itemBasket\n" +
             "WHERE id IN (\n" +
             "SELECT id FROM itemBasket GROUP BY id HAVING COUNT() > 1 \n" +

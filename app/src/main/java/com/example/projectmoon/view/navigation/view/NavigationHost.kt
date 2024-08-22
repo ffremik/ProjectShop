@@ -12,11 +12,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.projectmoon.view.basket.view.BasketScreen
 import com.example.projectmoon.view.basket.viewmodel.BasketVM
+import com.example.projectmoon.view.contacts.ContactsScreen
+import com.example.projectmoon.view.history.HistoryScreen
 import com.example.projectmoon.view.home.retrofit.Items
 import com.example.projectmoon.view.home.view.HomeScreen
 import com.example.projectmoon.view.informationscreen.view.InformationItemScreen
 import com.example.projectmoon.view.informationscreen.InformationVM
 import com.example.projectmoon.view.navigation.RouteNavigation
+import com.example.projectmoon.view.settings.SettingsScreen
 
 
 @Composable
@@ -24,7 +27,7 @@ fun NavigationHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     basketVM: BasketVM = viewModel(factory = BasketVM.factory)
-    ) {
+) {
     val listBasket by basketVM.listItemBasket.collectAsState(initial = emptyList())
     NavHost(
         modifier = modifier,
@@ -34,8 +37,17 @@ fun NavigationHost(
         composable(RouteNavigation.HOME_SCREEN.name) {
             HomeScreen(navController = navController)
         }
-        composable(RouteNavigation.BASKET_SCREEN.name){
+        composable(RouteNavigation.BASKET_SCREEN.name) {
             BasketScreen(navHostController = navController, basketVM = basketVM)
+        }
+        composable(RouteNavigation.CONTACTS_SCREEN.route) {
+            ContactsScreen()
+        }
+        composable(RouteNavigation.HISTORY_SCREEN.route) {
+            HistoryScreen()
+        }
+        composable(RouteNavigation.SETTINGS_SCREEN.route) {
+            SettingsScreen()
         }
         composable(
             route = RouteNavigation.INFORMATION_SCREEN.name
@@ -46,8 +58,8 @@ fun NavigationHost(
             arguments = listOf(
                 navArgument("price") { type = NavType.LongType },
                 navArgument("id") { type = NavType.StringType },
-                navArgument("type") {type = NavType.StringType},
-                navArgument("img_src") {type = NavType.StringType},
+                navArgument("type") { type = NavType.StringType },
+                navArgument("img_src") { type = NavType.StringType },
             )
         )
         { arg ->
@@ -60,13 +72,14 @@ fun NavigationHost(
                 price = price ?: 0L,
                 id = id ?: "0",
                 type = type ?: "0",
-                img_src = img_src ?: "0")
+                img_src = img_src ?: "0"
+            )
             InformationItemScreen(
                 informationVM = viewModel(factory = InformationVM.factory),
                 item = item,
                 listBasket
             )
-             //informationVM
+            //informationVM
         }
     }
 }
